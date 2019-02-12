@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "tslint --project tsconfig.json --format stylish",
-    "ci": "npm run type-check && npm run lint && npm run prettier",
+    "ci": "tsc && npm run lint && npm run prettier",
     "build": "npm run ci && tsc",
     "prettier": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc"
   },
