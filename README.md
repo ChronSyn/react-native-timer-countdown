@@ -3,7 +3,11 @@
 
 # React Native Timer Countdown
 
-A customizable countdown component for React Native (iOS and Android).
+A highly customizable countdown component for React Native (iOS and Android).
+
+<p align="center">
+  <img src="https://github.com/noelyoo/react-native-timer-countdown/blob/master/demo.gif" align="center" width="200px"  />
+</p>
 
 ## Install
 
@@ -20,19 +24,43 @@ yarn add react-native-timer-countdown
 ## Usage
 
 ```javascript
-import TimerCountdown from 'react-native-timer-countdown';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import TimerCountdown from "react-native-timer-countdown";
 
-render() {
-    return (
-        <TimerCountdown
-            initialSecondsRemaining={1000*60}
-            onTick={secondsRemaining => console.log('tick', secondsRemaining)}
-            onTimeElapsed={() => console.log('complete')}
-            allowFontScaling={true}
-            style={{ fontSize: 20 }}
-        />
-    )
-}
+const App = () => (
+  <View style={styles.container}>
+    <TimerCountdown
+      initialSecondsRemaining={1000 * 60}
+      onTick={(secondsRemaining) => console.log("tick", secondsRemaining)}
+      onTimeElapsed={() => console.log("complete")}
+      formatSecondsRemaining={(milliseconds) => {
+        const remainingSec = Math.round(milliseconds / 1000);
+        const seconds = parseInt((remainingSec % 60).toString(), 10);
+        const minutes = parseInt(((remainingSec / 60) % 60).toString(), 10);
+        const hours = parseInt((remainingSec / 3600).toString(), 10);
+        const s = seconds < 10 ? '0' + seconds : seconds;
+        const m = minutes < 10 ? '0' + minutes : minutes;
+        let h = hours < 10 ? '0' + hours : hours;
+        h = h === '00' ? '' : h + ':';
+        return h + m + ':' + s;
+      }}
+      allowFontScaling={true}
+      style={{ fontSize: 20 }}
+    />
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
+
+export default App;
 ```
 
 ## Props
@@ -62,12 +90,12 @@ Provided the state changes only occur in component B, A component will not reren
 ```javascript
 import React, { Component } from "react";
 import { StyleSheet, Button, View } from "react-native";
-import TimerCountdown from "./TimerCountdown";
+import TimerCountdown from "react-native-timer-countdown";
 
 const A = () => (
   <View style={styles.container}>
     <B />
-    <Timer />
+    <TimerCountdown initialSecondsRemaining={1000 * 60} />
   </View>
 );
 export default A;
@@ -88,15 +116,6 @@ class B extends Component {
   }
 }
 
-const Timer = () => (
-  <TimerCountdown
-    initialSecondsRemaining={1000 * 60}
-    onTick={secondsRemaining => console.log("tick", secondsRemaining)}
-    onTimeElapsed={() => console.log("complete")}
-    allowFontScaling={true}
-    style={{ fontSize: 20 }}
-  />
-);
 
 const styles = StyleSheet.create({
   container: {
