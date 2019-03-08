@@ -8,7 +8,7 @@ interface ITimerCountdownProps {
   interval?: number;
   formatSecondsRemaining?: (milliseconds: number) => string;
   onTick?: (secondsRemaining: number) => void;
-  onTimeElapsed?: () => void;
+  onComplete?: () => void;
   allowFontScaling?: boolean;
   style?: object;
 }
@@ -71,8 +71,8 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
     });
 
     if (isComplete) {
-      if (this.props.onTimeElapsed) {
-        this.props.onTimeElapsed();
+      if (this.props.onComplete) {
+        this.props.onComplete();
       }
       return;
     }
@@ -114,6 +114,6 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
     interval: 1000,
     formatSecondsRemaining: undefined,
     onTick: undefined,
-    onTimeElapsed: undefined
+    onComplete: undefined
   };
 }
