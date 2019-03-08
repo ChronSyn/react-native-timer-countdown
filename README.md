@@ -33,7 +33,7 @@ const App = () => (
     <TimerCountdown
       initialSecondsRemaining={1000 * 60}
       onTick={(secondsRemaining) => console.log("tick", secondsRemaining)}
-      onTimeElapsed={() => console.log("complete")}
+      onComplete={() => console.log("complete")}
       formatSecondsRemaining={(milliseconds) => {
         const remainingSec = Math.round(milliseconds / 1000);
         const seconds = parseInt((remainingSec % 60).toString(), 10);
@@ -68,12 +68,11 @@ export default App;
 | Name | Description | Type | Required | Default Value |
 | :--- | :----- | :--- | :---: | :---: |
 | initialSecondsRemaining | The time remaining for the countdown (in ms) | number | ✓ |  |
-| interval | The time between timer ticks (in ms). | number |  | 1000ms |
-| allowFontScaling | to allow font scaling | bool |  | false |
-| style | The custom styling which will be applied to the Text component | style |  |  |
 | formatSecondsRemaining | A function that formats the secondsRemaining | func | | |
 | onTick | A function to call each tick. It returns the remaining seconds. | func | | |
-| onTimeElapsed | A function to call when the countdown completes | func |  | |
+| onComplete | A function to call when the countdown completes | func |  | |
+| allowFontScaling | to allow font scaling | bool |  | false |
+| style | The custom styling which will be applied to the Text component | style |  |  |
 
 ## FAQ
 
