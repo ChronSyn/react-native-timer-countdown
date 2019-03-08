@@ -16,8 +16,8 @@ interface ITimerCountdownProps {
 export default class TimerCountdown extends React.Component<ITimerCountdownProps> {
   public readonly state = {
     secondsRemaining: this.props.initialSecondsRemaining,
-    timeoutId: null,
-    previousSeconds: null
+    timeoutId: undefined,
+    previousSeconds: undefined
   };
 
   public componentDidMount(): void {
@@ -25,11 +25,11 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
   }
 
   public componentWillReceiveProps(newProps): void {
-    if (this.state.timeoutId) {
+    if (this.state.timeoutId !== undefined) {
       clearTimeout(this.state.timeoutId);
     }
     this.setState({
-      previousSeconds: null,
+      previousSeconds: undefined,
       secondsRemaining: newProps.initialSecondsRemaining
     });
   }
@@ -60,12 +60,12 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
     const secondsRemaining = Math.max(this.state.secondsRemaining - dt, 0);
     const isComplete = this.state.previousSeconds && secondsRemaining <= 0;
 
-    if (this.state.timeoutId) {
+    if (this.state.timeoutId !== undefined) {
       clearTimeout(this.state.timeoutId);
     }
 
     this.setState({
-      timeoutId: isComplete ? null : setTimeout(this.tick, timeout),
+      timeoutId: isComplete ? undefined : setTimeout(this.tick, timeout),
       previousSeconds: currentSeconds,
       secondsRemaining
     });
@@ -77,13 +77,13 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
       return;
     }
 
-    if (this.props.onTick) {
+    if (this.props.onTick !== undefined) {
       this.props.onTick(secondsRemaining);
     }
   };
 
   private getFormattedTime = (milliseconds: number): string => {
-    if (this.props.formatSecondsRemaining) {
+    if (this.props.formatSecondsRemaining !== undefined) {
       return this.props.formatSecondsRemaining(milliseconds);
     }
     const remainingSec = Math.round(milliseconds / 1000);
@@ -112,8 +112,8 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
 
   public static defaultProps = {
     interval: 1000,
-    formatSecondsRemaining: null,
-    onTick: null,
-    onTimeElapsed: null
+    formatSecondsRemaining: undefined,
+    onTick: undefined,
+    onTimeElapsed: undefined
   };
 }
