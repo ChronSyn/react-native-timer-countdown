@@ -3,14 +3,6 @@ import * as React from 'react';
 // tslint:disable-next-line: no-implicit-dependencies
 import { Text } from 'react-native';
 
-/**
- * A customizable countdown component for React
- *
- * @export
- * @class TimerCountdown
- * @extends {React.Component}
- */
-
 interface ITimerCountdownProps {
   initialSecondsRemaining: number;
   interval?: number;
@@ -22,7 +14,6 @@ interface ITimerCountdownProps {
 }
 
 export default class TimerCountdown extends React.Component<ITimerCountdownProps> {
-  private mounted: boolean = false;
   public readonly state = {
     secondsRemaining: this.props.initialSecondsRemaining,
     timeoutId: null,
@@ -30,7 +21,6 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
   };
 
   public componentDidMount(): void {
-    this.mounted = true;
     this.tick();
   }
 
@@ -45,13 +35,12 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
   }
 
   public componentDidUpdate(): void {
-    if (!this.state.previousSeconds && this.state.secondsRemaining > 0 && this.mounted) {
+    if (!this.state.previousSeconds && this.state.secondsRemaining > 0) {
       this.tick();
     }
   }
 
   public componentWillUnmount(): void {
-    this.mounted = false;
     clearTimeout(this.state.timeoutId);
   }
 
@@ -71,16 +60,15 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
     const secondsRemaining = Math.max(this.state.secondsRemaining - dt, 0);
     const isComplete = this.state.previousSeconds && secondsRemaining <= 0;
 
-    if (this.mounted) {
-      if (this.state.timeoutId) {
-        clearTimeout(this.state.timeoutId);
-      }
-      this.setState({
-        timeoutId: isComplete ? null : setTimeout(this.tick, timeout),
-        previousSeconds: currentSeconds,
-        secondsRemaining
-      });
+    if (this.state.timeoutId) {
+      clearTimeout(this.state.timeoutId);
     }
+
+    this.setState({
+      timeoutId: isComplete ? null : setTimeout(this.tick, timeout),
+      previousSeconds: currentSeconds,
+      secondsRemaining
+    });
 
     if (isComplete) {
       if (this.props.onTimeElapsed) {
