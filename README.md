@@ -31,10 +31,10 @@ import TimerCountdown from "react-native-timer-countdown";
 const App = () => (
   <View style={styles.container}>
     <TimerCountdown
-      initialSecondsRemaining={1000 * 60}
-      onTick={(secondsRemaining) => console.log("tick", secondsRemaining)}
-      onTimeElapsed={() => console.log("complete")}
-      formatSecondsRemaining={(milliseconds) => {
+      initialMilliseconds={1000 * 60}
+      onTick={(milliseconds) => console.log("tick", milliseconds)}
+      onExpire={() => console.log("complete")}
+      formatMilliseconds={(milliseconds) => {
         const remainingSec = Math.round(milliseconds / 1000);
         const seconds = parseInt((remainingSec % 60).toString(), 10);
         const minutes = parseInt(((remainingSec / 60) % 60).toString(), 10);
@@ -67,13 +67,12 @@ export default App;
 
 | Name | Description | Type | Required | Default Value |
 | :--- | :----- | :--- | :---: | :---: |
-| initialSecondsRemaining | The time remaining for the countdown (in ms) | number | ✓ |  |
-| interval | The time between timer ticks (in ms). | number |  | 1000ms |
+| initialMilliseconds | The time remaining for the countdown (in ms) | number | ✓ |  |
+| formatMilliseconds | A function that formats the millisecondsRemaining | func | | |
+| onTick | A function to call each tick. It returns the remaining seconds. | func | | |
+| onExpire | A function to call when the countdown completes | func |  | |
 | allowFontScaling | to allow font scaling | bool |  | false |
 | style | The custom styling which will be applied to the Text component | style |  |  |
-| formatSecondsRemaining | A function that formats the secondsRemaining | func | | |
-| onTick | A function to call each tick. It returns the remaining seconds. | func | | |
-| onTimeElapsed | A function to call when the countdown completes | func |  | |
 
 ## FAQ
 
@@ -95,7 +94,7 @@ import TimerCountdown from "react-native-timer-countdown";
 const A = () => (
   <View style={styles.container}>
     <B />
-    <TimerCountdown initialSecondsRemaining={1000 * 60} />
+    <TimerCountdown initialMilliseconds={1000 * 60} />
   </View>
 );
 export default A;
