@@ -4,19 +4,19 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 interface ITimerCountdownProps {
-  initialSecondsRemaining: number;
-  formatSecondsRemaining?: (milliseconds: number) => string;
-  onTick?: (secondsRemaining: number) => void;
-  onComplete?: () => void;
+  initialMilliseconds: number;
+  formatMilliseconds?: (milliseconds: number) => string;
+  onTick?: (milliseconds: number) => void;
+  onExpire?: () => void;
   allowFontScaling?: boolean;
   style?: object;
 }
 
 export default class TimerCountdown extends React.Component<ITimerCountdownProps> {
   public readonly state = {
-    secondsRemaining: this.props.initialSecondsRemaining,
+    millisecondsRemaining: this.props.initialMilliseconds,
     timeoutId: undefined,
-    previousSeconds: undefined
+    previousMilliseconds: undefined
   };
 
   public componentDidMount(): void {
@@ -28,13 +28,13 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
       clearTimeout(this.state.timeoutId);
     }
     this.setState({
-      previousSeconds: undefined,
-      secondsRemaining: newProps.initialSecondsRemaining
+      previousMilliseconds: undefined,
+      millisecondsRemaining: newProps.initialMilliseconds
     });
   }
 
   public componentDidUpdate(): void {
-    if (!this.state.previousSeconds && this.state.secondsRemaining > 0) {
+    if (!this.state.previousMilliseconds && this.state.millisecondsRemaining > 0) {
       this.tick();
     }
   }
@@ -44,8 +44,10 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
   }
 
   private tick = () => {
-    const currentSeconds = Date.now();
-    const dt = this.state.previousSeconds ? currentSeconds - this.state.previousSeconds : 0;
+    const currentMilliseconds = Date.now();
+    const dt = this.state.previousMilliseconds
+      ? currentMilliseconds - this.state.previousMilliseconds
+      : 0;
     const interval: number = 1000;
 
     // correct for small variations in actual timeout time
@@ -56,8 +58,8 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
       timeout += interval;
     }
 
-    const secondsRemaining: number = Math.max(this.state.secondsRemaining - dt, 0);
-    const isComplete: boolean = this.state.previousSeconds && secondsRemaining <= 0;
+    const millisecondsRemaining: number = Math.max(this.state.millisecondsRemaining - dt, 0);
+    const isComplete: boolean = this.state.previousMilliseconds && millisecondsRemaining <= 0;
 
     if (this.state.timeoutId !== undefined) {
       clearTimeout(this.state.timeoutId);
@@ -65,25 +67,25 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
 
     this.setState({
       timeoutId: isComplete ? undefined : setTimeout(this.tick, timeout),
-      previousSeconds: currentSeconds,
-      secondsRemaining
+      previousMilliseconds: currentMilliseconds,
+      millisecondsRemaining
     });
 
     if (isComplete) {
-      if (this.props.onComplete) {
-        this.props.onComplete();
+      if (this.props.onExpire) {
+        this.props.onExpire();
       }
       return;
     }
 
     if (this.props.onTick !== undefined) {
-      this.props.onTick(secondsRemaining);
+      this.props.onTick(millisecondsRemaining);
     }
   };
 
   private getFormattedTime = (milliseconds: number): string => {
-    if (this.props.formatSecondsRemaining !== undefined) {
-      return this.props.formatSecondsRemaining(milliseconds);
+    if (this.props.formatMilliseconds !== undefined) {
+      return this.props.formatMilliseconds(milliseconds);
     }
     const remainingSec: number = Math.round(milliseconds / 1000);
 
@@ -99,19 +101,19 @@ export default class TimerCountdown extends React.Component<ITimerCountdownProps
   };
 
   public render(): React.ReactNode {
-    const secondsRemaining: number = this.state.secondsRemaining;
+    const millisecondsRemaining: number = this.state.millisecondsRemaining;
     const allowFontScaling: boolean = this.props.allowFontScaling;
     const style = this.props.style;
     return (
       <Text allowFontScaling={allowFontScaling} style={style}>
-        {this.getFormattedTime(secondsRemaining)}
+        {this.getFormattedTime(millisecondsRemaining)}
       </Text>
     );
   }
 
   public static defaultProps = {
-    formatSecondsRemaining: undefined,
+    formatMilliseconds: undefined,
     onTick: undefined,
-    onComplete: undefined
+    onExpire: undefined
   };
 }
