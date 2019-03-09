@@ -13,42 +13,44 @@ class TimerCountdown extends React.Component {
     constructor() {
         super(...arguments);
         this.state = {
-            secondsRemaining: this.props.initialSecondsRemaining,
+            millisecondsRemaining: this.props.initialMilliseconds,
             timeoutId: undefined,
-            previousSeconds: undefined
+            previousMilliseconds: undefined
         };
         this.tick = () => {
-            const currentSeconds = Date.now();
-            const dt = this.state.previousSeconds ? currentSeconds - this.state.previousSeconds : 0;
+            const currentMilliseconds = Date.now();
+            const dt = this.state.previousMilliseconds
+                ? currentMilliseconds - this.state.previousMilliseconds
+                : 0;
             const interval = 1000;
             const intervalSecondsRemaing = interval - (dt % interval);
             let timeout = intervalSecondsRemaing;
             if (intervalSecondsRemaing < interval / 2.0) {
                 timeout += interval;
             }
-            const secondsRemaining = Math.max(this.state.secondsRemaining - dt, 0);
-            const isComplete = this.state.previousSeconds && secondsRemaining <= 0;
+            const millisecondsRemaining = Math.max(this.state.millisecondsRemaining - dt, 0);
+            const isComplete = this.state.previousMilliseconds && millisecondsRemaining <= 0;
             if (this.state.timeoutId !== undefined) {
                 clearTimeout(this.state.timeoutId);
             }
             this.setState({
                 timeoutId: isComplete ? undefined : setTimeout(this.tick, timeout),
-                previousSeconds: currentSeconds,
-                secondsRemaining
+                previousMilliseconds: currentMilliseconds,
+                millisecondsRemaining
             });
             if (isComplete) {
-                if (this.props.onComplete) {
-                    this.props.onComplete();
+                if (this.props.onExpire) {
+                    this.props.onExpire();
                 }
                 return;
             }
             if (this.props.onTick !== undefined) {
-                this.props.onTick(secondsRemaining);
+                this.props.onTick(millisecondsRemaining);
             }
         };
         this.getFormattedTime = (milliseconds) => {
-            if (this.props.formatSecondsRemaining !== undefined) {
-                return this.props.formatSecondsRemaining(milliseconds);
+            if (this.props.formatMilliseconds !== undefined) {
+                return this.props.formatMilliseconds(milliseconds);
             }
             const remainingSec = Math.round(milliseconds / 1000);
             const seconds = parseInt((remainingSec % 60).toString(), 10);
@@ -69,12 +71,12 @@ class TimerCountdown extends React.Component {
             clearTimeout(this.state.timeoutId);
         }
         this.setState({
-            previousSeconds: undefined,
-            secondsRemaining: newProps.initialSecondsRemaining
+            previousMilliseconds: undefined,
+            millisecondsRemaining: newProps.initialMilliseconds
         });
     }
     componentDidUpdate() {
-        if (!this.state.previousSeconds && this.state.secondsRemaining > 0) {
+        if (!this.state.previousMilliseconds && this.state.millisecondsRemaining > 0) {
             this.tick();
         }
     }
@@ -82,17 +84,17 @@ class TimerCountdown extends React.Component {
         clearTimeout(this.state.timeoutId);
     }
     render() {
-        const secondsRemaining = this.state.secondsRemaining;
+        const millisecondsRemaining = this.state.millisecondsRemaining;
         const allowFontScaling = this.props.allowFontScaling;
         const style = this.props.style;
         return (<react_native_1.Text allowFontScaling={allowFontScaling} style={style}>
-        {this.getFormattedTime(secondsRemaining)}
+        {this.getFormattedTime(millisecondsRemaining)}
       </react_native_1.Text>);
     }
 }
 TimerCountdown.defaultProps = {
-    formatSecondsRemaining: undefined,
+    formatMilliseconds: undefined,
     onTick: undefined,
-    onComplete: undefined
+    onExpire: undefined
 };
 exports.default = TimerCountdown;
