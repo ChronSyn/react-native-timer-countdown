@@ -9,7 +9,7 @@ A highly customizable countdown component for React Native (iOS and Android).
   <img src="https://github.com/noelyoo/react-native-timer-countdown/blob/master/demo.gif" align="center" width="200px"  />
 </p>
 
-## Install
+## Installation
 
 ```sh
 npm install --save react-native-timer-countdown
@@ -21,7 +21,7 @@ or
 yarn add react-native-timer-countdown
 ```
 
-## Usage
+## Example
 
 ```javascript
 import React from "react";
@@ -125,6 +125,11 @@ const styles = StyleSheet.create({
   }
 });
 ```
+## Contributing
+
+We recommend the community help us make improvements. To report bugs please create an issue in this repository.
+
+#### Read our [contribution guidelines](./CONTRIBUTING.md).
 
 ## Author
 
